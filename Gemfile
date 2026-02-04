@@ -37,6 +37,9 @@ gem "redis", ">= 4.0.1"
 # Resend for email delivery
 gem "resend"
 
+# Solid Queue for background jobs
+gem "solid_queue"
+
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem "tzinfo-data", platforms: %i[ windows jruby ]
 
