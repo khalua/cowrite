@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { adminApi, contributionApi } from '../../services/api';
-import type { AdminStoryDetail, UserSummary } from '../../types';
+import type { AdminStoryDetail } from '../../types';
 
 export function AdminStoryDetailPage() {
   const { id } = useParams<{ id: string }>();

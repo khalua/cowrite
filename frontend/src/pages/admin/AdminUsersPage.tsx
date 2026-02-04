@@ -5,7 +5,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import type { AdminUser } from '../../types';
 
 export function AdminUsersPage() {
-  const { login } = useAuth();
+  useAuth(); // Ensure user is authenticated
   const [users, setUsers] = useState<AdminUser[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');

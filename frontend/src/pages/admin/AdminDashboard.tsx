@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { adminApi } from '../../services/api';
-import type { AdminUser, AdminCircle, AdminStory } from '../../types';
+import type { AdminUser, AdminStory } from '../../types';
 
 export function AdminDashboard() {
   const [stats, setStats] = useState({
