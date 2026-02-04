@@ -29,6 +29,23 @@ class Api::Admin::UsersController < Api::Admin::BaseController
     }
   end
 
+  def destroy
+    user = User.find(params[:id])
+
+    # Prevent deleting super admins
+    if user.is_super_admin
+      return render json: { error: "Cannot delete a super admin user" }, status: :forbidden
+    end
+
+    # Prevent self-deletion
+    if user.id == current_user.id
+      return render json: { error: "Cannot delete yourself" }, status: :forbidden
+    end
+
+    user.destroy!
+    render json: { message: "User deleted successfully" }
+  end
+
   private
 
   def user_json(user)

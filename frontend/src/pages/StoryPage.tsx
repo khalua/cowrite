@@ -38,7 +38,35 @@ export function StoryPage() {
   const [customDateTime, setCustomDateTime] = useState<string>('');
   const [useCustomDateTime, setUseCustomDateTime] = useState(false);
 
+  // Edit contribution state
+  const [editingContribution, setEditingContribution] = useState<{ id: number; content: string } | null>(null);
+  const [isEditSubmitting, setIsEditSubmitting] = useState(false);
+  const [editError, setEditError] = useState<string | null>(null);
+
   const isSuperAdmin = user?.is_super_admin ?? false;
+
+  // Handle contribution update from WebSocket
+  const handleContributionUpdated = useCallback((contribution: ContributionData) => {
+    setStory((prevStory) => {
+      if (!prevStory) return null;
+
+      const fullContribution = {
+        ...contribution,
+        user: {
+          ...contribution.user,
+          is_super_admin: false,
+          created_at: contribution.created_at,
+        },
+      };
+
+      return {
+        ...prevStory,
+        contributions: prevStory.contributions.map((c) =>
+          c.id === contribution.id ? fullContribution : c
+        ),
+      };
+    });
+  }, []);
 
   // Handle new contribution from WebSocket
   const handleNewContribution = useCallback((contribution: ContributionData) => {
@@ -100,6 +128,7 @@ export function StoryPage() {
 
     subscriptionRef.current = subscribeToStory(story.id, {
       onNewContribution: handleNewContribution,
+      onContributionUpdated: handleContributionUpdated,
       onConnected: () => setConnectionStatus('connected'),
       onDisconnected: () => setConnectionStatus('disconnected'),
       onRejected: () => setConnectionStatus('disconnected'),
@@ -109,7 +138,7 @@ export function StoryPage() {
       unsubscribe(subscriptionRef.current);
       subscriptionRef.current = null;
     };
-  }, [story?.id, story?.status, handleNewContribution]);
+  }, [story?.id, story?.status, handleNewContribution, handleContributionUpdated]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -147,6 +176,35 @@ export function StoryPage() {
   };
 
   const wordCount = newContent.trim().split(/\s+/).filter(Boolean).length;
+
+  const handleEditContribution = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingContribution || !editingContribution.content.trim()) return;
+
+    setIsEditSubmitting(true);
+    setEditError(null);
+
+    try {
+      const res = await contributionApi.update(editingContribution.id, editingContribution.content);
+
+      // Update local state
+      setStory((prevStory) => {
+        if (!prevStory) return null;
+        return {
+          ...prevStory,
+          contributions: prevStory.contributions.map((c) =>
+            c.id === res.data.id ? { ...c, content: res.data.content, word_count: res.data.word_count } : c
+          ),
+        };
+      });
+
+      setEditingContribution(null);
+    } catch (err: any) {
+      setEditError(err.response?.data?.error || 'Failed to update contribution');
+    } finally {
+      setIsEditSubmitting(false);
+    }
+  };
 
   // Contributor card colors - vibrant for dark mode
   const contributorCardColors = [
@@ -317,7 +375,7 @@ export function StoryPage() {
             {story.contributions.map((contribution, index) => (
               <span
                 key={contribution.id}
-                className={`transition-all duration-500 ${
+                className={`transition-all duration-500 group relative ${
                   newContributionFlash === contribution.id
                     ? 'bg-yellow-500/30 rounded px-1 -mx-1'
                     : highlightedUserId === contribution.user_id
@@ -335,6 +393,16 @@ export function StoryPage() {
                 }
               >
                 {contribution.content}
+                {/* Edit button for user's own contributions */}
+                {contribution.user_id === user?.id && story.status === 'active' && (
+                  <button
+                    onClick={() => setEditingContribution({ id: contribution.id, content: contribution.content })}
+                    className="ml-1 opacity-0 group-hover:opacity-100 transition-opacity inline-flex items-center justify-center w-5 h-5 text-xs bg-blue-600 text-white rounded hover:bg-blue-700"
+                    title="Edit your contribution"
+                  >
+                    ✎
+                  </button>
+                )}
                 {index < story.contributions.length - 1 ? ' ' : ''}
               </span>
             ))}
@@ -456,6 +524,52 @@ export function StoryPage() {
         {story.status === 'completed' && !isSuperAdmin && (
           <div className="bg-gray-800 border border-gray-700 rounded-xl p-6 text-center">
             <p className="text-gray-400">This story has been completed and is read-only.</p>
+          </div>
+        )}
+
+        {/* Edit Contribution Modal */}
+        {editingContribution && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+            <div className="bg-gray-800 rounded-2xl border border-gray-700 p-6 max-w-2xl w-full mx-4">
+              <h3 className="text-xl font-bold text-white mb-4">Edit Your Contribution</h3>
+
+              <form onSubmit={handleEditContribution}>
+                <textarea
+                  value={editingContribution.content}
+                  onChange={(e) => setEditingContribution({ ...editingContribution, content: e.target.value })}
+                  rows={6}
+                  className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none resize-none mb-4"
+                  required
+                />
+
+                {editError && (
+                  <div className="p-3 bg-red-900/50 border border-red-700 text-red-300 rounded-lg text-sm mb-4">
+                    {editError}
+                  </div>
+                )}
+
+                <div className="flex justify-end gap-3">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setEditingContribution(null);
+                      setEditError(null);
+                    }}
+                    disabled={isEditSubmitting}
+                    className="px-4 py-2 bg-gray-700 text-gray-300 rounded-lg hover:bg-gray-600 disabled:opacity-50"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={isEditSubmitting || !editingContribution.content.trim()}
+                    className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50"
+                  >
+                    {isEditSubmitting ? 'Saving...' : 'Save Changes'}
+                  </button>
+                </div>
+              </form>
+            </div>
           </div>
         )}
       </main>

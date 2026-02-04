@@ -1,6 +1,8 @@
 class Api::ContributionsController < Api::BaseController
-  before_action :set_story
-  before_action :authorize_access!
+  before_action :set_story, except: [:update]
+  before_action :set_contribution, only: [:update]
+  before_action :authorize_access!, except: [:update]
+  before_action :authorize_edit!, only: [:update]
   before_action :check_story_active!, only: [:create], unless: :super_admin?
 
   def create
@@ -29,7 +31,28 @@ class Api::ContributionsController < Api::BaseController
     end
   end
 
+  def update
+    if @contribution.update(content: params[:contribution][:content])
+      broadcast_contribution_updated(@contribution)
+      render json: contribution_json(@contribution)
+    else
+      render json: { error: @contribution.errors.full_messages.join(", ") }, status: :unprocessable_entity
+    end
+  end
+
   private
+
+  def set_contribution
+    @contribution = Contribution.find(params[:id])
+    @story = @contribution.story
+  end
+
+  def authorize_edit!
+    # Users can only edit their own contributions
+    return if @contribution.user_id == current_user.id
+
+    render json: { error: "You can only edit your own contributions" }, status: :forbidden
+  end
 
   def set_story
     @story = Story.find(params[:story_id])
@@ -92,6 +115,16 @@ class Api::ContributionsController < Api::BaseController
       "story_#{contribution.story_id}",
       {
         type: "new_contribution",
+        contribution: contribution_json(contribution)
+      }
+    )
+  end
+
+  def broadcast_contribution_updated(contribution)
+    ActionCable.server.broadcast(
+      "story_#{contribution.story_id}",
+      {
+        type: "contribution_updated",
         contribution: contribution_json(contribution)
       }
     )

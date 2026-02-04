@@ -23,13 +23,17 @@ Rails.application.routes.draw do
       resources :contributions, only: [:create]
     end
 
+    # Standalone contributions route for editing
+    resources :contributions, only: [:update]
+
     # Admin routes (super admin only)
     namespace :admin do
-      resources :circles, only: [:index, :show]
+      resources :circles, only: [:index, :show, :destroy]
       resources :stories, only: [:index, :show]
-      resources :users, only: [:index, :show] do
+      resources :users, only: [:index, :show, :destroy] do
         post "impersonate", on: :member
       end
+      resources :contributions, only: [:update, :destroy]
     end
   end
 

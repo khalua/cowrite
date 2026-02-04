@@ -11,6 +11,12 @@ class Api::Admin::CirclesController < Api::Admin::BaseController
     render json: circle_json(circle)
   end
 
+  def destroy
+    circle = Circle.find(params[:id])
+    circle.destroy!
+    render json: { message: "Circle deleted successfully" }
+  end
+
   private
 
   def circle_json(circle)

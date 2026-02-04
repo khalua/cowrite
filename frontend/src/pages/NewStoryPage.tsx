@@ -3,11 +3,11 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { storyApi } from '../services/api';
 
 const storyPrompts = [
-  'The letter arrived exactly 50 years late...',
+  'One day I woke up and realized all the hair on my bald head had grown back. ',
   'She found the key under the welcome mat, but the door was already open.',
-  'The last human on Earth sat alone in a room. There was a knock on the door.',
-  "When I was born, I was given one year to live. That was 100 years ago.",
-  'The time traveler appeared in front of me, handed me a photograph, and whispered...',
+  "Roland was a shy middle-shool kid who loved tinkering with his dad's humanoid.",
+  "It was cold backstage on the first evening I slipped on my sparkly wrestling unitard.",
+  'We lost the internet for 4 days, and everything changed.',
 ];
 
 export function NewStoryPage() {

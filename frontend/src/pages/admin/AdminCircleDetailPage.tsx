@@ -1,13 +1,30 @@
 import { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { adminApi } from '../../services/api';
 import type { AdminCircle } from '../../types';
 
 export function AdminCircleDetailPage() {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const [circle, setCircle] = useState<AdminCircle | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const handleDelete = async () => {
+    if (!circle) return;
+
+    try {
+      setIsDeleting(true);
+      await adminApi.deleteCircle(circle.id);
+      navigate('/admin/circles');
+    } catch (err: any) {
+      setError(err.response?.data?.error || 'Failed to delete circle');
+      setIsDeleting(false);
+      setShowDeleteConfirm(false);
+    }
+  };
 
   useEffect(() => {
     if (!id) return;
@@ -49,10 +66,20 @@ export function AdminCircleDetailPage() {
 
       {/* Circle Info */}
       <div className="bg-gray-800 rounded-2xl border border-gray-700 p-8 mb-6">
-        <h1 className="text-3xl font-bold text-white mb-2">{circle.name}</h1>
-        {circle.description && (
-          <p className="text-gray-400 mb-6">{circle.description}</p>
-        )}
+        <div className="flex justify-between items-start mb-4">
+          <div>
+            <h1 className="text-3xl font-bold text-white mb-2">{circle.name}</h1>
+            {circle.description && (
+              <p className="text-gray-400">{circle.description}</p>
+            )}
+          </div>
+          <button
+            onClick={() => setShowDeleteConfirm(true)}
+            className="px-4 py-2 bg-red-900/50 text-red-400 rounded-lg hover:bg-red-900"
+          >
+            Delete Circle
+          </button>
+        </div>
 
         <div className="grid md:grid-cols-3 gap-6 text-sm">
           <div>
@@ -155,6 +182,34 @@ export function AdminCircleDetailPage() {
           </div>
         </div>
       </div>
+
+      {/* Delete Confirmation Modal */}
+      {showDeleteConfirm && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-gray-800 rounded-2xl border border-gray-700 p-6 max-w-md mx-4">
+            <h3 className="text-xl font-bold text-white mb-4">Delete Circle</h3>
+            <p className="text-gray-300 mb-6">
+              Are you sure you want to delete <strong>{circle.name}</strong>? This will also delete all stories and contributions in this circle. This action cannot be undone.
+            </p>
+            <div className="flex justify-end gap-3">
+              <button
+                onClick={() => setShowDeleteConfirm(false)}
+                disabled={isDeleting}
+                className="px-4 py-2 bg-gray-700 text-gray-300 rounded-lg hover:bg-gray-600 disabled:opacity-50"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDelete}
+                disabled={isDeleting}
+                className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50"
+              >
+                {isDeleting ? 'Deleting...' : 'Delete Circle'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

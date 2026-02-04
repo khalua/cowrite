@@ -1,14 +1,17 @@
 import { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { adminApi } from '../../services/api';
 import type { AdminUserDetail } from '../../types';
 
 export function AdminUserDetailPage() {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const [user, setUser] = useState<AdminUserDetail | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
   const [impersonating, setImpersonating] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     if (!id) return;
@@ -31,6 +34,20 @@ export function AdminUserDetailPage() {
     } catch (err: any) {
       setError(err.response?.data?.error || 'Failed to impersonate user');
       setImpersonating(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!user) return;
+
+    try {
+      setIsDeleting(true);
+      await adminApi.deleteUser(user.id);
+      navigate('/admin/users');
+    } catch (err: any) {
+      setError(err.response?.data?.error || 'Failed to delete user');
+      setIsDeleting(false);
+      setShowDeleteConfirm(false);
     }
   };
 
@@ -81,13 +98,21 @@ export function AdminUserDetailPage() {
                 Super Admin
               </span>
             ) : (
-              <button
-                onClick={handleImpersonate}
-                disabled={impersonating}
-                className="px-4 py-2 bg-green-900/50 text-green-400 rounded-lg hover:bg-green-900 disabled:opacity-50"
-              >
-                {impersonating ? 'Switching...' : 'Impersonate User'}
-              </button>
+              <>
+                <button
+                  onClick={handleImpersonate}
+                  disabled={impersonating}
+                  className="px-4 py-2 bg-green-900/50 text-green-400 rounded-lg hover:bg-green-900 disabled:opacity-50"
+                >
+                  {impersonating ? 'Switching...' : 'Impersonate User'}
+                </button>
+                <button
+                  onClick={() => setShowDeleteConfirm(true)}
+                  className="px-4 py-2 bg-red-900/50 text-red-400 rounded-lg hover:bg-red-900"
+                >
+                  Delete User
+                </button>
+              </>
             )}
           </div>
         </div>
@@ -170,6 +195,34 @@ export function AdminUserDetailPage() {
           </div>
         </div>
       </div>
+
+      {/* Delete Confirmation Modal */}
+      {showDeleteConfirm && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-gray-800 rounded-2xl border border-gray-700 p-6 max-w-md mx-4">
+            <h3 className="text-xl font-bold text-white mb-4">Delete User</h3>
+            <p className="text-gray-300 mb-6">
+              Are you sure you want to delete <strong>{user.name}</strong>? This will also delete all their contributions and remove them from all circles. This action cannot be undone.
+            </p>
+            <div className="flex justify-end gap-3">
+              <button
+                onClick={() => setShowDeleteConfirm(false)}
+                disabled={isDeleting}
+                className="px-4 py-2 bg-gray-700 text-gray-300 rounded-lg hover:bg-gray-600 disabled:opacity-50"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDelete}
+                disabled={isDeleting}
+                className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50"
+              >
+                {isDeleting ? 'Deleting...' : 'Delete User'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

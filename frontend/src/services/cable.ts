@@ -43,6 +43,7 @@ export interface ContributionData {
 
 export interface StoryChannelCallbacks {
   onNewContribution: (contribution: ContributionData) => void;
+  onContributionUpdated?: (contribution: ContributionData) => void;
   onConnected?: () => void;
   onDisconnected?: () => void;
   onRejected?: () => void;
@@ -78,6 +79,8 @@ export function subscribeToStory(
       received(data: StoryChannelMessage) {
         if (data.type === 'new_contribution') {
           callbacks.onNewContribution(data.contribution);
+        } else if (data.type === 'contribution_updated') {
+          callbacks.onContributionUpdated?.(data.contribution);
         }
       },
     }

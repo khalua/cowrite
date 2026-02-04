@@ -1,7 +1,14 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { adminApi, contributionApi } from '../../services/api';
-import type { AdminStoryDetail } from '../../types';
+import type { AdminStoryDetail, UserSummary } from '../../types';
+
+interface EditingContribution {
+  id: number;
+  content: string;
+  user_id: number;
+  written_at: string;
+}
 
 export function AdminStoryDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -15,6 +22,13 @@ export function AdminStoryDetailPage() {
   const [writtenAt, setWrittenAt] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState('');
+
+  // Edit/Delete contribution state
+  const [editingContribution, setEditingContribution] = useState<EditingContribution | null>(null);
+  const [isEditSubmitting, setIsEditSubmitting] = useState(false);
+  const [editError, setEditError] = useState('');
+  const [deletingContributionId, setDeletingContributionId] = useState<number | null>(null);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState<number | null>(null);
 
   useEffect(() => {
     if (!id) return;
@@ -58,6 +72,60 @@ export function AdminStoryDetailPage() {
       setSubmitError(err.response?.data?.error || 'Failed to create contribution');
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const handleEditContribution = (contribution: AdminStoryDetail['contributions'][0]) => {
+    setEditingContribution({
+      id: contribution.id,
+      content: contribution.content,
+      user_id: contribution.user.id,
+      written_at: '',
+    });
+    setEditError('');
+  };
+
+  const handleSaveEdit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingContribution || !story) return;
+
+    setIsEditSubmitting(true);
+    setEditError('');
+
+    try {
+      await adminApi.updateContribution(editingContribution.id, {
+        content: editingContribution.content,
+        user_id: editingContribution.user_id,
+        written_at: editingContribution.written_at || undefined,
+      });
+
+      // Refresh story data
+      const res = await adminApi.getStory(story.id);
+      setStory(res.data);
+      setEditingContribution(null);
+    } catch (err: any) {
+      setEditError(err.response?.data?.error || 'Failed to update contribution');
+    } finally {
+      setIsEditSubmitting(false);
+    }
+  };
+
+  const handleDeleteContribution = async (contributionId: number) => {
+    if (!story) return;
+
+    setDeletingContributionId(contributionId);
+
+    try {
+      await adminApi.deleteContribution(contributionId);
+
+      // Refresh story data
+      const res = await adminApi.getStory(story.id);
+      setStory(res.data);
+      setShowDeleteConfirm(null);
+    } catch (err: any) {
+      setError(err.response?.data?.error || 'Failed to delete contribution');
+    } finally {
+      setDeletingContributionId(null);
     }
   };
 
@@ -235,12 +303,29 @@ export function AdminStoryDetailPage() {
                     )}
                   </div>
                 </div>
-                <div className="text-right text-sm text-gray-500">
-                  <div>#{index + 1}</div>
-                  <div>
-                    {new Date(
-                      contribution.impersonation?.written_at || contribution.created_at
-                    ).toLocaleString()}
+                <div className="flex items-start gap-4">
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => handleEditContribution(contribution)}
+                      className="px-2 py-1 text-xs bg-blue-900/50 text-blue-400 rounded hover:bg-blue-900"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => setShowDeleteConfirm(contribution.id)}
+                      disabled={deletingContributionId === contribution.id}
+                      className="px-2 py-1 text-xs bg-red-900/50 text-red-400 rounded hover:bg-red-900 disabled:opacity-50"
+                    >
+                      {deletingContributionId === contribution.id ? 'Deleting...' : 'Delete'}
+                    </button>
+                  </div>
+                  <div className="text-right text-sm text-gray-500">
+                    <div>#{index + 1}</div>
+                    <div>
+                      {new Date(
+                        contribution.impersonation?.written_at || contribution.created_at
+                      ).toLocaleString()}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -256,6 +341,126 @@ export function AdminStoryDetailPage() {
           )}
         </div>
       </div>
+
+      {/* Edit Contribution Modal */}
+      {editingContribution && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-gray-800 rounded-2xl border border-gray-700 p-6 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+            <h3 className="text-xl font-bold text-white mb-4">Edit Contribution</h3>
+
+            <form onSubmit={handleSaveEdit} className="space-y-4">
+              <div className="grid md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-1">
+                    Attributed to User
+                  </label>
+                  <select
+                    value={editingContribution.user_id}
+                    onChange={(e) => setEditingContribution({
+                      ...editingContribution,
+                      user_id: parseInt(e.target.value)
+                    })}
+                    className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none"
+                    required
+                  >
+                    {story.circle.members.map((member) => (
+                      <option key={member.id} value={member.id}>
+                        {member.name} ({member.email})
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-1">
+                    New Timestamp (optional)
+                  </label>
+                  <input
+                    type="datetime-local"
+                    value={editingContribution.written_at}
+                    onChange={(e) => setEditingContribution({
+                      ...editingContribution,
+                      written_at: e.target.value
+                    })}
+                    className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">
+                    Leave empty to keep current timestamp
+                  </p>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-1">
+                  Content
+                </label>
+                <textarea
+                  value={editingContribution.content}
+                  onChange={(e) => setEditingContribution({
+                    ...editingContribution,
+                    content: e.target.value
+                  })}
+                  rows={6}
+                  className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none resize-none"
+                  required
+                />
+              </div>
+
+              {editError && (
+                <div className="p-3 bg-red-900/50 border border-red-700 text-red-300 rounded-lg text-sm">
+                  {editError}
+                </div>
+              )}
+
+              <div className="flex justify-end gap-3">
+                <button
+                  type="button"
+                  onClick={() => setEditingContribution(null)}
+                  disabled={isEditSubmitting}
+                  className="px-4 py-2 bg-gray-700 text-gray-300 rounded-lg hover:bg-gray-600 disabled:opacity-50"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={isEditSubmitting}
+                  className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50"
+                >
+                  {isEditSubmitting ? 'Saving...' : 'Save Changes'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {showDeleteConfirm !== null && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-gray-800 rounded-2xl border border-gray-700 p-6 max-w-md mx-4">
+            <h3 className="text-xl font-bold text-white mb-4">Delete Contribution</h3>
+            <p className="text-gray-300 mb-6">
+              Are you sure you want to delete this contribution? This action cannot be undone.
+            </p>
+            <div className="flex justify-end gap-3">
+              <button
+                onClick={() => setShowDeleteConfirm(null)}
+                disabled={deletingContributionId !== null}
+                className="px-4 py-2 bg-gray-700 text-gray-300 rounded-lg hover:bg-gray-600 disabled:opacity-50"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => handleDeleteContribution(showDeleteConfirm)}
+                disabled={deletingContributionId !== null}
+                className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50"
+              >
+                {deletingContributionId !== null ? 'Deleting...' : 'Delete'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -109,6 +109,9 @@ export const contributionApi = {
   create: (storyId: number, content: string) =>
     api.post<Contribution>(`/stories/${storyId}/contributions`, { contribution: { content } }),
 
+  update: (id: number, content: string) =>
+    api.patch<Contribution>(`/contributions/${id}`, { contribution: { content } }),
+
   // Super admin impersonation
   createAsUser: (
     storyId: number,
@@ -131,15 +134,27 @@ export const adminApi = {
   impersonateUser: (id: number) =>
     api.post<{ message: string; token: string; user: User }>(`/admin/users/${id}/impersonate`),
 
+  deleteUser: (id: number) => api.delete<{ message: string }>(`/admin/users/${id}`),
+
   // Circles
   listCircles: () => api.get<AdminCircle[]>('/admin/circles'),
 
   getCircle: (id: number) => api.get<AdminCircle>(`/admin/circles/${id}`),
 
+  deleteCircle: (id: number) => api.delete<{ message: string }>(`/admin/circles/${id}`),
+
   // Stories
   listStories: () => api.get<AdminStory[]>('/admin/stories'),
 
   getStory: (id: number) => api.get<AdminStoryDetail>(`/admin/stories/${id}`),
+
+  // Contributions
+  updateContribution: (
+    id: number,
+    data: { content?: string; user_id?: number; written_at?: string }
+  ) => api.patch<Contribution>(`/admin/contributions/${id}`, { contribution: data }),
+
+  deleteContribution: (id: number) => api.delete<{ message: string }>(`/admin/contributions/${id}`),
 };
 
 export default api;
