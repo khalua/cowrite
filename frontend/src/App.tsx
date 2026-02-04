@@ -20,6 +20,7 @@ import {
   AdminStoriesPage,
   AdminStoryDetailPage,
 } from './pages/admin';
+import { AcceptInvitationPage } from './pages/AcceptInvitationPage';
 
 const queryClient = new QueryClient();
 
@@ -126,6 +127,9 @@ function AppRoutes() {
           </PrivateRoute>
         }
       />
+
+      {/* Invitation Route */}
+      <Route path="/invitations/:token" element={<AcceptInvitationPage />} />
 
       {/* Admin Routes */}
       <Route

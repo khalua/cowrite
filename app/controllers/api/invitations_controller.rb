@@ -1,7 +1,27 @@
 class Api::InvitationsController < Api::BaseController
   before_action :set_circle, only: [:create]
   before_action :authorize_member!, only: [:create]
-  skip_before_action :authenticate_user!, only: [:accept]
+  skip_before_action :authenticate_user!, only: [:show, :accept]
+
+  def show
+    invitation = Invitation.find_by!(token: params[:token])
+
+    if invitation.expired?
+      render json: { error: "This invitation has expired" }, status: :gone
+      return
+    end
+
+    if invitation.status != "pending"
+      render json: { error: "This invitation has already been used" }, status: :gone
+      return
+    end
+
+    render json: {
+      email: invitation.email,
+      circle_name: invitation.circle.name,
+      inviter_name: invitation.inviter.name
+    }
+  end
 
   def create
     invitation = @circle.invitations.build(

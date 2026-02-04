@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { invitationApi } from '../services/api';
 
 export function LoginPage() {
   const [email, setEmail] = useState('');
@@ -9,6 +10,8 @@ export function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const invitationToken = searchParams.get('invitation');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -17,6 +20,18 @@ export function LoginPage() {
 
     try {
       await login(email, password);
+
+      // If there's an invitation token, accept it and go to the circle
+      if (invitationToken) {
+        try {
+          const response = await invitationApi.accept(invitationToken);
+          navigate(`/circles/${response.data.id}`);
+          return;
+        } catch {
+          // If invitation fails, still proceed to dashboard
+        }
+      }
+
       navigate('/dashboard');
     } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : 'Invalid email or password';

@@ -74,6 +74,15 @@ export const circleApi = {
     api.post<Circle>(`/invitations/${token}/accept`),
 };
 
+// Invitation endpoints (public)
+export const invitationApi = {
+  get: (token: string) =>
+    api.get<{ email: string; circle_name: string; inviter_name: string }>(`/invitations/${token}`),
+
+  accept: (token: string) =>
+    api.post<Circle>(`/invitations/${token}/accept`),
+};
+
 // Story endpoints
 export const storyApi = {
   list: (circleId: number) => api.get<Story[]>(`/circles/${circleId}/stories`),

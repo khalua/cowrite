@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { invitationApi } from '../services/api';
 
 export function RegisterPage() {
   const [name, setName] = useState('');
@@ -11,6 +12,8 @@ export function RegisterPage() {
   const [isLoading, setIsLoading] = useState(false);
   const { register } = useAuth();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const invitationToken = searchParams.get('invitation');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -30,6 +33,18 @@ export function RegisterPage() {
 
     try {
       await register(email, password, name);
+
+      // If there's an invitation token, accept it and go to the circle
+      if (invitationToken) {
+        try {
+          const response = await invitationApi.accept(invitationToken);
+          navigate(`/circles/${response.data.id}`);
+          return;
+        } catch {
+          // If invitation fails, still proceed to tutorial
+        }
+      }
+
       navigate('/tutorial');
     } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : 'Registration failed. Please try again.';

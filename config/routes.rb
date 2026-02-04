@@ -14,6 +14,7 @@ Rails.application.routes.draw do
     end
 
     # Invitations
+    get "invitations/:token", to: "invitations#show"
     post "invitations/:token/accept", to: "invitations#accept"
 
     # Stories
