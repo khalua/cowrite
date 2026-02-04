@@ -90,7 +90,13 @@ export const storyApi = {
   get: (id: number) => api.get<Story>(`/stories/${id}`),
 
   create: (circleId: number, data: { title: string; prompt?: string; initialContent?: string }) =>
-    api.post<Story>(`/circles/${circleId}/stories`, { story: data }),
+    api.post<Story>(`/circles/${circleId}/stories`, {
+      story: {
+        title: data.title,
+        prompt: data.prompt,
+        initial_content: data.initialContent,
+      },
+    }),
 
   complete: (id: number) => api.patch<Story>(`/stories/${id}/complete`),
 };
