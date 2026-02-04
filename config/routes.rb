@@ -41,4 +41,8 @@ Rails.application.routes.draw do
   # Render dynamic PWA files from app/views/pwa/*
   get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
   get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
+
+  # Serve React frontend for all other routes (SPA catch-all)
+  get "*path", to: "frontend#index", constraints: ->(req) { !req.path.start_with?("/api", "/cable", "/rails") }
+  root "frontend#index"
 end
