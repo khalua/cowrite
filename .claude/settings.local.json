@@ -1,0 +1,29 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ruby --version:*)",
+      "Bash(rails --version:*)",
+      "Bash(node --version:*)",
+      "Bash(psql:*)",
+      "Bash(rbenv versions:*)",
+      "Bash(rvm list:*)",
+      "Bash(asdf list:*)",
+      "Bash(brew install:*)",
+      "Bash(rbenv install:*)",
+      "Bash(rbenv global:*)",
+      "Bash(gem install:*)",
+      "Bash(rails new:*)",
+      "Bash(npm create:*)",
+      "Bash(npm install:*)",
+      "Bash(bundle install:*)",
+      "Bash(rails generate:*)",
+      "Bash(chmod:*)",
+      "Bash(rails db:create:*)",
+      "Bash(rails db:migrate:*)",
+      "Bash(rails db:seed:*)",
+      "Bash(npm run build:*)",
+      "mcp__claude_ai_Figma__get_screenshot",
+      "mcp__claude_ai_Figma__get_design_context"
+    ]
+  }
+}

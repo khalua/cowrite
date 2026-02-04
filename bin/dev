@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+# Run Rails API on port 3001 and React frontend on port 3000
+# React's Vite proxy will forward API requests to Rails
+
+echo "Starting development servers..."
+echo "  Rails API: http://localhost:3001"
+echo "  React Frontend: http://localhost:3000"
+echo ""
+
+# Start Rails in background
+cd "$(dirname "$0")/.."
+RAILS_PORT=3001 bin/rails server -p 3001 &
+RAILS_PID=$!
+
+# Start React frontend
+cd frontend
+npm run dev &
+VITE_PID=$!
+
+# Handle Ctrl+C to kill both processes
+trap "kill $RAILS_PID $VITE_PID 2>/dev/null" EXIT
+
+# Wait for either process to exit
+wait $RAILS_PID $VITE_PID

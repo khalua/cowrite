@@ -1,0 +1,26 @@
+<h1>You're invited to join <%= @circle.name %>!</h1>
+
+<p>
+  <strong><%= @inviter.name %></strong> has invited you to join their writing circle on CoWrite.
+</p>
+
+<% if @circle.description.present? %>
+  <p style="background-color: #f3f4f6; padding: 16px; border-radius: 8px; font-style: italic;">
+    "<%= @circle.description %>"
+  </p>
+<% end %>
+
+<p>
+  CoWrite is a collaborative storytelling platform where you and your friends take turns writing parts of a story together.
+</p>
+
+<a href="<%= @accept_url %>" class="button">Accept Invitation</a>
+
+<p style="font-size: 14px; color: #6b7280;">
+  Or copy and paste this link into your browser:<br>
+  <a href="<%= @accept_url %>" style="color: #7c3aed;"><%= @accept_url %></a>
+</p>
+
+<p style="font-size: 14px; color: #6b7280;">
+  This invitation will expire in 7 days.
+</p>
