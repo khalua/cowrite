@@ -39,7 +39,7 @@ export function AdminCircleDetailPage() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <div className="animate-spin h-8 w-8 border-4 border-green-500 border-t-transparent rounded-full" />
+        <div className="animate-spin h-8 w-8 border-4 border-yellow-500 border-t-transparent rounded-full" />
       </div>
     );
   }
@@ -48,7 +48,7 @@ export function AdminCircleDetailPage() {
     return (
       <div className="text-center py-12">
         <p className="text-red-400 mb-4">{error || 'Circle not found'}</p>
-        <Link to="/admin/circles" className="text-green-500 hover:text-green-400">
+        <Link to="/admin/circles" className="text-yellow-500 hover:text-yellow-400">
           Back to Circles
         </Link>
       </div>
@@ -59,7 +59,7 @@ export function AdminCircleDetailPage() {
     <div className="max-w-4xl mx-auto">
       {/* Header */}
       <div className="mb-6">
-        <Link to="/admin/circles" className="text-green-500 hover:text-green-400 text-sm">
+        <Link to="/admin/circles" className="text-yellow-500 hover:text-yellow-400 text-sm">
           &larr; Back to Circles
         </Link>
       </div>
@@ -86,7 +86,7 @@ export function AdminCircleDetailPage() {
             <p className="text-gray-500">Created by</p>
             <Link
               to={`/admin/users/${circle.creator.id}`}
-              className="font-medium text-green-500 hover:text-green-400"
+              className="font-medium text-yellow-500 hover:text-yellow-400"
             >
               {circle.creator.name}
             </Link>
@@ -121,7 +121,7 @@ export function AdminCircleDetailPage() {
                 className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-700 transition"
               >
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-r from-green-400 to-emerald-400 flex items-center justify-center text-white font-medium">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-r from-yellow-400 to-amber-400 flex items-center justify-center text-white font-medium">
                     {member.user.name.charAt(0).toUpperCase()}
                   </div>
                   <div>
@@ -132,7 +132,7 @@ export function AdminCircleDetailPage() {
                 <span
                   className={`px-2 py-1 text-xs font-semibold rounded ${
                     member.role === 'admin'
-                      ? 'bg-green-900/50 text-green-400'
+                      ? 'bg-yellow-900/50 text-yellow-400'
                       : 'bg-gray-700 text-gray-400'
                   }`}
                 >
@@ -166,7 +166,7 @@ export function AdminCircleDetailPage() {
                   <span
                     className={`px-2 py-1 text-xs font-semibold rounded ${
                       story.status === 'active'
-                        ? 'bg-green-900/50 text-green-400'
+                        ? 'bg-yellow-900/50 text-yellow-400'
                         : 'bg-gray-700 text-gray-400'
                     }`}
                   >

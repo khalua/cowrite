@@ -55,7 +55,7 @@ export function NewStoryPage() {
     <div className="min-h-screen bg-gray-900">
       <nav className="bg-gray-800 border-b border-gray-700">
         <div className="container mx-auto px-4 py-4">
-          <Link to="/dashboard" className="text-2xl font-bold text-green-500">
+          <Link to="/dashboard" className="text-2xl font-bold text-yellow-500">
             CoWrite
           </Link>
         </div>
@@ -64,7 +64,7 @@ export function NewStoryPage() {
       <main className="container mx-auto px-4 py-8 max-w-2xl">
         <Link
           to={`/circles/${circleId}`}
-          className="text-green-500 hover:text-green-400 mb-6 inline-block"
+          className="text-yellow-500 hover:text-yellow-400 mb-6 inline-block"
         >
           ← Back to circle
         </Link>
@@ -91,7 +91,7 @@ export function NewStoryPage() {
                 type="text"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none transition"
+                className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-yellow-500 focus:border-transparent outline-none transition"
                 placeholder="The Mysterious Letter"
                 required
               />
@@ -104,7 +104,7 @@ export function NewStoryPage() {
                   onClick={() => setUsePrompt(true)}
                   className={`flex-1 py-3 rounded-lg font-semibold transition ${
                     usePrompt
-                      ? 'bg-green-900/50 text-green-400 border-2 border-green-500'
+                      ? 'bg-yellow-900/50 text-yellow-400 border-2 border-yellow-500'
                       : 'bg-gray-700 text-gray-400 border-2 border-transparent'
                   }`}
                 >
@@ -115,7 +115,7 @@ export function NewStoryPage() {
                   onClick={() => setUsePrompt(false)}
                   className={`flex-1 py-3 rounded-lg font-semibold transition ${
                     !usePrompt
-                      ? 'bg-green-900/50 text-green-400 border-2 border-green-500'
+                      ? 'bg-yellow-900/50 text-yellow-400 border-2 border-yellow-500'
                       : 'bg-gray-700 text-gray-400 border-2 border-transparent'
                   }`}
                 >
@@ -132,7 +132,7 @@ export function NewStoryPage() {
                       onClick={() => setSelectedPrompt(prompt)}
                       className={`w-full text-left p-4 rounded-lg border-2 transition ${
                         selectedPrompt === prompt
-                          ? 'border-green-500 bg-green-900/30'
+                          ? 'border-yellow-500 bg-yellow-900/30'
                           : 'border-gray-600 hover:border-gray-500'
                       }`}
                     >
@@ -145,7 +145,7 @@ export function NewStoryPage() {
                   value={customContent}
                   onChange={(e) => setCustomContent(e.target.value)}
                   rows={6}
-                  className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none transition resize-none"
+                  className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-yellow-500 focus:border-transparent outline-none transition resize-none"
                   placeholder="Write the opening of your story..."
                 />
               )}
@@ -154,7 +154,7 @@ export function NewStoryPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white font-semibold rounded-lg hover:opacity-90 transition disabled:opacity-50"
+              className="w-full py-3 bg-gradient-to-r from-yellow-500 to-amber-500 text-white font-semibold rounded-lg hover:opacity-90 transition disabled:opacity-50"
             >
               {isLoading ? 'Creating...' : 'Start Story'}
             </button>

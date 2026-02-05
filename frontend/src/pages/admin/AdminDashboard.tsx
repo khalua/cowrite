@@ -45,7 +45,7 @@ export function AdminDashboard() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <div className="animate-spin h-8 w-8 border-4 border-green-500 border-t-transparent rounded-full" />
+        <div className="animate-spin h-8 w-8 border-4 border-yellow-500 border-t-transparent rounded-full" />
       </div>
     );
   }
@@ -82,7 +82,7 @@ export function AdminDashboard() {
 
         <div className="bg-gray-800 rounded-xl border border-gray-700 p-6">
           <p className="text-sm text-gray-400 mb-1">Active Stories</p>
-          <p className="text-3xl font-bold text-green-400">{stats.activeStories}</p>
+          <p className="text-3xl font-bold text-yellow-400">{stats.activeStories}</p>
         </div>
       </div>
 
@@ -92,7 +92,7 @@ export function AdminDashboard() {
         <div className="bg-gray-800 rounded-xl border border-gray-700 p-6">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-lg font-bold text-white">Recent Users</h2>
-            <Link to="/admin/users" className="text-sm text-green-500 hover:text-green-400">
+            <Link to="/admin/users" className="text-sm text-yellow-500 hover:text-yellow-400">
               View all
             </Link>
           </div>
@@ -123,7 +123,7 @@ export function AdminDashboard() {
         <div className="bg-gray-800 rounded-xl border border-gray-700 p-6">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-lg font-bold text-white">Recent Stories</h2>
-            <Link to="/admin/stories" className="text-sm text-green-500 hover:text-green-400">
+            <Link to="/admin/stories" className="text-sm text-yellow-500 hover:text-yellow-400">
               View all
             </Link>
           </div>
@@ -142,7 +142,7 @@ export function AdminDashboard() {
                   <span
                     className={`px-2 py-1 text-xs rounded ${
                       story.status === 'active'
-                        ? 'bg-green-900/50 text-green-400'
+                        ? 'bg-yellow-900/50 text-yellow-400'
                         : 'bg-gray-700 text-gray-400'
                     }`}
                   >

@@ -39,7 +39,7 @@ export function AdminUsersPage() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <div className="animate-spin h-8 w-8 border-4 border-green-500 border-t-transparent rounded-full" />
+        <div className="animate-spin h-8 w-8 border-4 border-yellow-500 border-t-transparent rounded-full" />
       </div>
     );
   }
@@ -84,7 +84,7 @@ export function AdminUsersPage() {
               <tr key={user.id} className="hover:bg-gray-700/50">
                 <td className="px-6 py-4">
                   <Link to={`/admin/users/${user.id}`} className="block">
-                    <p className="font-medium text-white hover:text-green-400">
+                    <p className="font-medium text-white hover:text-yellow-400">
                       {user.name}
                     </p>
                     <p className="text-sm text-gray-400">{user.email}</p>
@@ -111,7 +111,7 @@ export function AdminUsersPage() {
                     <button
                       onClick={() => handleImpersonate(user)}
                       disabled={impersonating === user.id}
-                      className="px-3 py-1 text-sm bg-green-900/50 text-green-400 rounded hover:bg-green-900 disabled:opacity-50"
+                      className="px-3 py-1 text-sm bg-yellow-900/50 text-yellow-400 rounded hover:bg-yellow-900 disabled:opacity-50"
                     >
                       {impersonating === user.id ? 'Switching...' : 'Impersonate'}
                     </button>

@@ -19,7 +19,7 @@ export function AdminCirclesPage() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <div className="animate-spin h-8 w-8 border-4 border-green-500 border-t-transparent rounded-full" />
+        <div className="animate-spin h-8 w-8 border-4 border-yellow-500 border-t-transparent rounded-full" />
       </div>
     );
   }
@@ -78,7 +78,7 @@ export function AdminCirclesPage() {
                 {circle.members.slice(0, 5).map((member) => (
                   <div
                     key={member.id}
-                    className="w-8 h-8 rounded-full bg-gradient-to-r from-green-400 to-emerald-400 flex items-center justify-center text-white text-xs font-medium border-2 border-gray-800"
+                    className="w-8 h-8 rounded-full bg-gradient-to-r from-yellow-400 to-amber-400 flex items-center justify-center text-white text-xs font-medium border-2 border-gray-800"
                     title={member.user.name}
                   >
                     {member.user.name.charAt(0).toUpperCase()}

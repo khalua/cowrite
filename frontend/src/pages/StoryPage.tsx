@@ -250,7 +250,7 @@ export function StoryPage() {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gray-900 flex items-center justify-center">
-        <div className="animate-spin h-8 w-8 border-4 border-green-500 border-t-transparent rounded-full" />
+        <div className="animate-spin h-8 w-8 border-4 border-yellow-500 border-t-transparent rounded-full" />
       </div>
     );
   }
@@ -263,7 +263,7 @@ export function StoryPage() {
             {error ? 'Error loading story' : 'Story not found'}
           </h1>
           {error && <p className="text-red-400 mb-4">{error}</p>}
-          <Link to="/dashboard" className="text-green-500 hover:text-green-400">
+          <Link to="/dashboard" className="text-yellow-500 hover:text-yellow-400">
             Back to dashboard
           </Link>
         </div>
@@ -281,7 +281,7 @@ export function StoryPage() {
       <nav className="bg-gray-800 border-b border-gray-700">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <div className="flex items-center gap-4">
-            <Link to="/dashboard" className="text-2xl font-bold text-green-500">
+            <Link to="/dashboard" className="text-2xl font-bold text-yellow-500">
               CoWrite
             </Link>
             {isSuperAdmin && (
@@ -316,7 +316,7 @@ export function StoryPage() {
       <main className="container mx-auto px-4 py-8 max-w-4xl">
         <Link
           to={`/circles/${story.circle_id}`}
-          className="text-green-500 hover:text-green-400 mb-6 inline-block"
+          className="text-yellow-500 hover:text-yellow-400 mb-6 inline-block"
         >
           ← Back to circle
         </Link>
@@ -327,7 +327,7 @@ export function StoryPage() {
             <span
               className={`px-3 py-1 rounded-full text-sm font-semibold ${
                 story.status === 'active'
-                  ? 'bg-green-900/50 text-green-400'
+                  ? 'bg-yellow-900/50 text-yellow-400'
                   : 'bg-gray-700 text-gray-400'
               }`}
             >
@@ -496,7 +496,7 @@ export function StoryPage() {
                 value={newContent}
                 onChange={(e) => setNewContent(e.target.value)}
                 rows={6}
-                className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none transition resize-none mb-4"
+                className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-yellow-500 focus:border-transparent outline-none transition resize-none mb-4"
                 placeholder="Continue the story..."
               />
               <div className="flex justify-between items-center">
@@ -507,7 +507,7 @@ export function StoryPage() {
                   className={`px-6 py-3 font-semibold rounded-lg hover:opacity-90 transition disabled:opacity-50 ${
                     isSuperAdmin && selectedUserId
                       ? 'bg-gradient-to-r from-red-600 to-orange-600 text-white'
-                      : 'bg-gradient-to-r from-green-600 to-emerald-600 text-white'
+                      : 'bg-gradient-to-r from-yellow-500 to-amber-500 text-white'
                   }`}
                 >
                   {isSubmitting
@@ -538,7 +538,7 @@ export function StoryPage() {
                   value={editingContribution.content}
                   onChange={(e) => setEditingContribution({ ...editingContribution, content: e.target.value })}
                   rows={6}
-                  className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none resize-none mb-4"
+                  className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-yellow-500 focus:border-transparent outline-none resize-none mb-4"
                   required
                 />
 
@@ -563,7 +563,7 @@ export function StoryPage() {
                   <button
                     type="submit"
                     disabled={isEditSubmitting || !editingContribution.content.trim()}
-                    className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50"
+                    className="px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 disabled:opacity-50"
                   >
                     {isEditSubmitting ? 'Saving...' : 'Save Changes'}
                   </button>

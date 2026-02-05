@@ -54,7 +54,7 @@ export function AdminUserDetailPage() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <div className="animate-spin h-8 w-8 border-4 border-green-500 border-t-transparent rounded-full" />
+        <div className="animate-spin h-8 w-8 border-4 border-yellow-500 border-t-transparent rounded-full" />
       </div>
     );
   }
@@ -63,7 +63,7 @@ export function AdminUserDetailPage() {
     return (
       <div className="text-center py-12">
         <p className="text-red-400 mb-4">{error || 'User not found'}</p>
-        <Link to="/admin/users" className="text-green-500 hover:text-green-400">
+        <Link to="/admin/users" className="text-yellow-500 hover:text-yellow-400">
           Back to Users
         </Link>
       </div>
@@ -74,7 +74,7 @@ export function AdminUserDetailPage() {
     <div className="max-w-4xl mx-auto">
       {/* Header */}
       <div className="mb-6">
-        <Link to="/admin/users" className="text-green-500 hover:text-green-400 text-sm">
+        <Link to="/admin/users" className="text-yellow-500 hover:text-yellow-400 text-sm">
           &larr; Back to Users
         </Link>
       </div>
@@ -83,7 +83,7 @@ export function AdminUserDetailPage() {
       <div className="bg-gray-800 rounded-2xl border border-gray-700 p-8 mb-6">
         <div className="flex justify-between items-start mb-6">
           <div className="flex items-center gap-4">
-            <div className="w-16 h-16 rounded-full bg-gradient-to-r from-green-400 to-emerald-400 flex items-center justify-center text-white text-2xl font-bold">
+            <div className="w-16 h-16 rounded-full bg-gradient-to-r from-yellow-400 to-amber-400 flex items-center justify-center text-white text-2xl font-bold">
               {user.name.charAt(0).toUpperCase()}
             </div>
             <div>
@@ -102,7 +102,7 @@ export function AdminUserDetailPage() {
                 <button
                   onClick={handleImpersonate}
                   disabled={impersonating}
-                  className="px-4 py-2 bg-green-900/50 text-green-400 rounded-lg hover:bg-green-900 disabled:opacity-50"
+                  className="px-4 py-2 bg-yellow-900/50 text-yellow-400 rounded-lg hover:bg-yellow-900 disabled:opacity-50"
                 >
                   {impersonating ? 'Switching...' : 'Impersonate User'}
                 </button>
@@ -153,7 +153,7 @@ export function AdminUserDetailPage() {
                 <span
                   className={`px-2 py-1 text-xs font-semibold rounded ${
                     circle.role === 'admin'
-                      ? 'bg-green-900/50 text-green-400'
+                      ? 'bg-yellow-900/50 text-yellow-400'
                       : 'bg-gray-700 text-gray-400'
                   }`}
                 >

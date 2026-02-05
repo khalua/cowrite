@@ -55,7 +55,7 @@ export function TutorialPage() {
             <div
               key={index}
               className={`h-2 w-8 rounded-full transition-colors ${
-                index <= currentStep ? 'bg-green-500' : 'bg-gray-600'
+                index <= currentStep ? 'bg-yellow-500' : 'bg-gray-600'
               }`}
             />
           ))}
@@ -75,7 +75,7 @@ export function TutorialPage() {
           </button>
           <button
             onClick={handleNext}
-            className="flex-1 py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white font-semibold rounded-lg hover:opacity-90 transition"
+            className="flex-1 py-3 bg-gradient-to-r from-yellow-500 to-amber-500 text-white font-semibold rounded-lg hover:opacity-90 transition"
           >
             {currentStep < tutorialSteps.length - 1 ? 'Next' : 'Create Your First Circle'}
           </button>

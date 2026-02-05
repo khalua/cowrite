@@ -46,7 +46,7 @@ export function LoginPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex items-center justify-center p-4">
       <div className="bg-gray-800 rounded-2xl shadow-xl w-full max-w-md p-8 border border-gray-700">
-        <Link to="/" className="text-green-500 hover:text-green-400 mb-6 inline-block">
+        <Link to="/" className="text-yellow-500 hover:text-yellow-400 mb-6 inline-block">
           ← Back to home
         </Link>
 
@@ -69,7 +69,7 @@ export function LoginPage() {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none transition"
+              className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-yellow-500 focus:border-transparent outline-none transition"
               placeholder="you@example.com"
               required
             />
@@ -84,7 +84,7 @@ export function LoginPage() {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none transition"
+              className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-yellow-500 focus:border-transparent outline-none transition"
               placeholder=""
               required
             />
@@ -93,7 +93,7 @@ export function LoginPage() {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white font-semibold rounded-lg hover:opacity-90 transition disabled:opacity-50"
+            className="w-full py-3 bg-gradient-to-r from-yellow-500 to-amber-500 text-white font-semibold rounded-lg hover:opacity-90 transition disabled:opacity-50"
           >
             {isLoading ? 'Logging in...' : 'Log In'}
           </button>
@@ -101,7 +101,7 @@ export function LoginPage() {
 
         <p className="mt-8 text-center text-gray-400">
           Don't have an account?{' '}
-          <Link to="/register" className="text-green-500 hover:text-green-400 font-semibold">
+          <Link to="/register" className="text-yellow-500 hover:text-yellow-400 font-semibold">
             Sign up
           </Link>
         </p>

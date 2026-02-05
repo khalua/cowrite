@@ -21,7 +21,7 @@ export function DashboardPage() {
     <div className="min-h-screen bg-gray-900">
       <nav className="bg-gray-800 border-b border-gray-700">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <Link to="/dashboard" className="text-2xl font-bold text-green-500">
+          <Link to="/dashboard" className="text-2xl font-bold text-yellow-500">
             CoWrite
           </Link>
           <div className="flex items-center gap-4">
@@ -49,7 +49,7 @@ export function DashboardPage() {
           <h1 className="text-3xl font-bold text-white">Your Circles</h1>
           <Link
             to="/create-circle"
-            className="px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white font-semibold rounded-lg hover:opacity-90 transition"
+            className="px-6 py-3 bg-gradient-to-r from-yellow-500 to-amber-500 text-white font-semibold rounded-lg hover:opacity-90 transition"
           >
             + Create Circle
           </Link>
@@ -57,7 +57,7 @@ export function DashboardPage() {
 
         {isLoading ? (
           <div className="text-center py-12">
-            <div className="animate-spin h-8 w-8 border-4 border-green-500 border-t-transparent rounded-full mx-auto" />
+            <div className="animate-spin h-8 w-8 border-4 border-yellow-500 border-t-transparent rounded-full mx-auto" />
           </div>
         ) : circles.length === 0 ? (
           <div className="text-center py-16 bg-gray-800 rounded-2xl border border-gray-700">
@@ -68,7 +68,7 @@ export function DashboardPage() {
             </p>
             <Link
               to="/create-circle"
-              className="inline-block px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white font-semibold rounded-lg hover:opacity-90 transition"
+              className="inline-block px-6 py-3 bg-gradient-to-r from-yellow-500 to-amber-500 text-white font-semibold rounded-lg hover:opacity-90 transition"
             >
               Create Your First Circle
             </Link>
